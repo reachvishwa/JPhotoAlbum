@@ -13,15 +13,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.ActionMap;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
-public class JPhotoShow extends JFrame {
+public class JPhotoShow extends JFrame implements IPhotoShow {
     JPhotoCollection photos = null;
     JPhotoPanel panel = null;
     JList parentList = null;
@@ -33,14 +27,22 @@ public class JPhotoShow extends JFrame {
     public static final String A_NEXT = "next";
     public static final String A_PREV = "prev";
     public static final String A_EXIT = "exit";
-    
+
+    public JPhotoShow()
+    {
+    }
+
     public JPhotoShow(JPhotoCollection photos) {
         this(photos, 5000, null);
     }
     
     public JPhotoShow(JPhotoCollection photos, int interval, JList list) {
+        Initialize(photos, interval, list);
+    }
+
+    public void Initialize(JPhotoCollection photos, int interval, JList list) {
         this.photos = photos;
-        
+
         panel = new JPhotoPanel();
         panel.setFullView(true);
         Container picPane = getContentPane();
@@ -57,7 +59,7 @@ public class JPhotoShow extends JFrame {
         panel.setBackground(Color.black);
         panel.setShowtext(true);
         panel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        
+
         setUndecorated(true);
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
 
@@ -65,7 +67,7 @@ public class JPhotoShow extends JFrame {
             addAction(A_EXIT, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
         else
             addAction(A_CLOSE, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0));
-        
+
 
         addAction(A_CLOSE, KeyStroke.getKeyStroke(KeyEvent.VK_X, 0));
         addAction(A_NEXT, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
@@ -79,11 +81,11 @@ public class JPhotoShow extends JFrame {
         // XXX Should register ListDataListener to photos to get async updates
 
         if (interval>0) {
-            timer = new javax.swing.Timer(interval, new ShowAction(A_NEXT));
+            timer = new Timer(interval, new ShowAction(A_NEXT));
             timer.start();
         }
     }
-    
+
     void addAction(String code, KeyStroke key) {
         InputMap im = panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = panel.getActionMap();        
