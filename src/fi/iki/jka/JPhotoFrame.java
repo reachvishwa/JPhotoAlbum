@@ -580,8 +580,17 @@ public class JPhotoFrame extends JFrame
         else if (cmd.equals(JPhotoMenu.A_SHOWEXIF)) {
             showExif();
         }
-        else if (cmd.equals(JPhotoMenu.A_SLIDESHOW)) {
-            StartSlideShow(this.photos,this.show);
+        else if (cmd.startsWith(JPhotoMenu.A_SLIDESHOW)) {
+            String[] array= cmd.split(":");
+            int speedInterval = 5000;
+            if (array.length == 2)
+                speedInterval = Integer.parseInt(array[1]);
+            StartSlideShow(this.photos, this.show, new IShowMessage() {
+                public void ShowErrorMessage(JPhotoFrame parent,String message) {
+                    JOptionPane.showMessageDialog(parent, message,
+                            APP_NAME, JOptionPane.ERROR_MESSAGE);
+                }
+            },speedInterval);
 
         }
         else if (cmd.equals(JPhotoMenu.A_HELP)) {
@@ -621,14 +630,13 @@ public class JPhotoFrame extends JFrame
         setTitle();
     }
 
-    public void StartSlideShow(JPhotoCollection photos,IPhotoShow show) {
+    public void StartSlideShow(JPhotoCollection photos,IPhotoShow show,IShowMessage showMessage, int speedInterval) {
         if (photos.getSize()>0) {
-            show.Initialize(photos, 5000, list);
+            show.Initialize(photos, speedInterval, list);
             show.setVisible(true);
         }
         else
-            JOptionPane.showMessageDialog(this, "No photos to show!",
-                                          APP_NAME, JOptionPane.ERROR_MESSAGE);
+            showMessage.ShowErrorMessage(this,"No photos to show!");
     }
 
     public void insertPhotos(String files[]) {

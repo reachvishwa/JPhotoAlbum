@@ -158,6 +158,7 @@ public class JPhotoMenu {
         add(menu, A_SHOWEXIF, KeyEvent.VK_E,
             KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK) );
         add(menu, A_SLIDESHOW, KeyEvent.VK_S);
+        add(menu, A_SLIDESHOW + ":1000", KeyEvent.VK_S);
 
         
         menu = new JMenu(new JPhotoAction(listener, "Help", KeyEvent.VK_H));
